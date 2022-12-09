@@ -4,10 +4,12 @@ from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.core.files import File
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.views.decorators.csrf import csrf_exempt
 
 
 @api_view(['GET'])
-def get_results(request, query):
+@csrf_exempt
+def get_results(request, query, k=100):
 
     print(query)
     BSBI_instance = BSBIIndex(data_dir='collection',
