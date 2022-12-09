@@ -16,11 +16,11 @@ def get_results(request, query, k=100):
                               postings_encoding=VBEPostings,
                               output_dir='index')
 
-    try:
-        lst = BSBI_instance.retrieve_bm25(query, k)
-        documents = [doc for (_, doc) in lst]
-    except:
-        documents = []
+    # try:
+    lst = BSBI_instance.retrieve_bm25(query, k)
+    documents = [doc for (_, doc) in lst]
+    # except:
+    #     documents = []
 
     results = {}
     for doc_id in documents:
