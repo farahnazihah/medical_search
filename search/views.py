@@ -33,9 +33,9 @@ def get_results(request, query, k=100):
             with open(url[1:], 'r') as f:
                 content = File(f).read()
                 content = content.replace("-\n", "")
-                content = " ".join(content.split())[:200] + "..."
+                content = " ".join(content.split())[:200]
                 content = content + \
-                    "..." if len(content) > 140 else content
+                    "..." if len(content) > 200 else content
                 results.append([doc_id, content])
         except:
             continue
@@ -46,3 +46,21 @@ def get_results(request, query, k=100):
         'total': len(results),
         'results': results
     })
+
+
+@api_view(['GET'])
+@csrf_exempt
+def get_content(request, doc_id):
+    id = doc_id.replace(":", "/")
+    url = staticfiles_storage.url(f'collection/{str(id)}')
+    try:
+        with open(url[1:], 'r') as f:
+            content = File(f).read()
+            # content = content.replace("-\n", "")
+            # content = " ".join(content.split())
+
+        return Response({
+            "doc_id": id, "content": content
+        })
+    except:
+        return Response({"error": "not found"})
