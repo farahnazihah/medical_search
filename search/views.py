@@ -16,22 +16,23 @@ def get_results(request, query, k=100):
                               postings_encoding=VBEPostings,
                               output_dir='index')
 
-    # try:
-    lst = BSBI_instance.retrieve_bm25(query, k)
-    documents = [doc for (_, doc) in lst]
-    # except:
-    #     documents = []
+    try:
+        lst = BSBI_instance.retrieve_bm25(query, k)
+        documents = [doc for (_, doc) in lst]
+    except:
+        documents = []
 
-    results = {}
+    results = []
     for doc_id in documents:
         url = staticfiles_storage.url(f'collection/{str(doc_id)}')
         try:
             with open(url[1:], 'r') as f:
                 content = File(f).read()
                 content = content.replace("-\n", "")
-                results[doc_id] = " ".join(content.split())[:100] + "..."
-                results[doc_id] = results[doc_id] + \
-                    "..." if results[doc_id] > 100 else results[doc_id]
+                content = " ".join(content.split())[:140] + "..."
+                content = content + \
+                    "..." if len(content) > 140 else content
+                results.append([doc_id, content])
         except:
             continue
 
