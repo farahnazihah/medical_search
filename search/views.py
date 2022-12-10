@@ -42,7 +42,7 @@ def get_results(request, query, k=100):
 
     return Response({
         'query': query,
-        'time': end - start,
+        'time': str(end - start)[6:13],
         'total': len(results),
         'results': results
     })
