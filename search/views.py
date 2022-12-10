@@ -5,13 +5,15 @@ from rest_framework.decorators import api_view
 from django.core.files import File
 from django.contrib.staticfiles.storage import staticfiles_storage
 from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
 
 
 @api_view(['GET'])
 @csrf_exempt
 def get_results(request, query, k=100):
 
-    print(query)
+    start = datetime.now()
+
     BSBI_instance = BSBIIndex(data_dir='collection',
                               postings_encoding=VBEPostings,
                               output_dir='index')
@@ -21,6 +23,8 @@ def get_results(request, query, k=100):
         documents = [doc for (_, doc) in lst]
     except:
         documents = []
+
+    end = datetime.now()
 
     results = []
     for doc_id in documents:
@@ -37,6 +41,8 @@ def get_results(request, query, k=100):
             continue
 
     return Response({
+        'query': query,
+        'time': end - start,
         'total': len(results),
         'results': results
     })
