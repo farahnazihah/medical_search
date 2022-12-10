@@ -33,7 +33,7 @@ def get_results(request, query, k=100):
             with open(url[1:], 'r') as f:
                 content = File(f).read()
                 content = content.replace("-\n", "")
-                content = " ".join(content.split())[:140] + "..."
+                content = " ".join(content.split())[:200] + "..."
                 content = content + \
                     "..." if len(content) > 140 else content
                 results.append([doc_id, content])
